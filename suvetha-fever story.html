@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suvetha vs. The Fever Dragon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF4EA;
+    --cream-panel: #FFFFFF;
+    --plum: #3D1F3A;
+    --plum-soft: #6B4763;
+    --coral: #FF6F5E;
+    --coral-deep: #E8503E;
+    --rose: #F7B9B0;
+    --gold: #F0A93F;
+    --line: rgba(61, 31, 58, 0.12);
+    --shadow: rgba(61, 31, 58, 0.15);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --cream: #241220;
+      --cream-panel: #2E1729;
+      --plum: #FBEFF6;
+      --plum-soft: #D9BFD3;
+      --coral: #FF8A7A;
+      --coral-deep: #FF6F5E;
+      --rose: #6B3A50;
+      --gold: #F0A93F;
+      --line: rgba(251, 239, 246, 0.14);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --cream: #241220;
+    --cream-panel: #2E1729;
+    --plum: #FBEFF6;
+    --plum-soft: #D9BFD3;
+    --coral: #FF8A7A;
+    --coral-deep: #FF6F5E;
+    --rose: #6B3A50;
+    --gold: #F0A93F;
+    --line: rgba(251, 239, 246, 0.14);
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream);
+    color: var(--plum);
+    font-family: 'Quicksand', sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 64px;
+    position: relative;
+  }
+
+  .sky {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .sky span {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.35;
+    animation: drift linear infinite;
+  }
+  @keyframes drift {
+    from { transform: translateY(110vh) rotate(0deg); }
+    to { transform: translateY(-10vh) rotate(360deg); }
+  }
+
+  .book {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .masthead {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .masthead .kicker {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--coral-deep);
+    letter-spacing: 0.01em;
+    margin: 0 0 6px;
+  }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(30px, 7vw, 42px);
+    line-height: 1.08;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .progress {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin: 22px 0 18px;
+  }
+  .progress .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  .progress .dot.active {
+    background: var(--coral);
+    transform: scale(1.35);
+  }
+  .progress .dot.done {
+    background: var(--rose);
+  }
+
+  .stage {
+    position: relative;
+    min-height: 430px;
+  }
+
+  .page {
+    display: none;
+    background: var(--cream-panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 34px 28px 28px;
+    box-shadow: 0 18px 40px -20px var(--shadow);
+    animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .page.active { display: block; }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .scene-icon {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .scene-icon svg { width: 100%; max-width: 220px; height: auto; }
+
+  .page h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(21px, 5vw, 26px);
+    line-height: 1.2;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+
+  .page p {
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: var(--plum-soft);
+    margin: 0 0 10px;
+    text-align: center;
+    max-width: 42ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page p strong { color: var(--plum); font-weight: 700; }
+  .page p em { font-family: 'Fraunces', serif; font-style: italic; color: var(--coral-deep); }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 26px;
+    gap: 10px;
+  }
+
+  button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+    padding: 13px 22px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+  button:active { transform: scale(0.96); }
+  button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+  .btn-primary {
+    background: var(--coral);
+    color: #fff;
+    box-shadow: 0 10px 22px -10px var(--coral-deep);
+    flex: 1;
+  }
+  .btn-primary:hover { box-shadow: 0 14px 26px -10px var(--coral-deep); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--plum-soft);
+    padding: 13px 16px;
+  }
+  .btn-ghost:disabled { opacity: 0.35; cursor: default; }
+
+  .joke-box {
+    margin-top: 4px;
+    text-align: center;
+  }
+  .joke-line {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15.5px;
+    color: var(--coral-deep);
+    min-height: 22px;
+  }
+
+  .finale {
+    text-align: center;
+  }
+  .finale h2 { font-size: clamp(24px, 6vw, 30px); }
+  .signoff {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--plum);
+    margin-top: 18px;
+  }
+
+  .confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .confetti {
+    position: absolute;
+    top: -20px;
+    font-size: 20px;
+    animation: fall 2.6s ease-in forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page, .confetti, .sky span { animation: none !important; }
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 26px;
+    font-size: 13px;
+    color: var(--plum-soft);
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky" aria-hidden="true"></div>
+
+<main class="book">
+  <div class="masthead">
+    <p class="kicker">a very important royal record</p>
+    <h1>Suvetha vs.<br>The Fever Dragon</h1>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <div class="stage">
+
+    <!-- Page 1 -->
+    <section class="page active" data-page="0">
+      <div class="scene-icon">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="120" rx="80" ry="10" fill="var(--rose)" opacity="0.4"/>
+          <path d="M100 20 C130 20 155 45 155 75 C155 105 130 120 100 120 C70 120 45 105 45 75 C45 45 70 20 100 20 Z" fill="var(--rose)"/>
+          <circle cx="80" cy="70" r="6" fill="var(--plum)"/>
+          <circle cx="120" cy="70" r="6" fill="var(--plum)"/>
+          <path d="M82 92 Q100 80 118 92" stroke="var(--plum)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M60 45 Q100 15 140 45" stroke="var(--coral)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <text x="100" y="40" text-anchor="middle" font-size="26">🤒</text>
+        </svg>
+      </div>
+      <h2>Once upon a Thursday afternoon...</h2>
+      <p>...a fever dragon snuck into the kingdom of <strong>Suvetha</strong> and decided, quite rudely, to move in without knocking.</p>
+      <p>The whole kingdom gasped. Because everyone knew — a queen with a fever is still a queen. Just a queen who currently wants her blanket and nothing else.</p>
+    </section>
+
+    <!-- Page 2 -->
+    <section class="page" data-page="1">
+      <div class="scene-icon">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 100 Q100 40 150 100" stroke="var(--gold)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="100" cy="70" r="34" fill="var(--gold)" opacity="0.9"/>
+          <path d="M85 68 q15 -14 30 0" stroke="var(--plum)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="90" cy="62" r="4" fill="var(--plum)"/>
+          <circle cx="110" cy="62" r="4" fill="var(--plum)"/>
+          <text x="100" y="30" text-anchor="middle" font-size="20">🎤</text>
+        </svg>
+      </div>
+      <h2>The kingdom's greatest weapon: her voice</h2>
+      <p>Normally, one word from Suvetha could calm any storm, fix any mood, end any argument in the palace.</p>
+      <p>But today her throat had filed for leave. <em>"Even legends need a sick day,"</em> the royal doctor announced solemnly.</p>
+    </section>
+
+    <!-- Page 3 -->
+    <section class="page" data-page="2">
+      <div class="scene-icon">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="50" width="80" height="60" rx="14" fill="var(--coral)" opacity="0.85"/>
+          <circle cx="100" cy="45" r="22" fill="var(--rose)"/>
+          <path d="M88 43 q12 -10 24 0" stroke="var(--plum)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <circle cx="93" cy="38" r="3.5" fill="var(--plum)"/>
+          <circle cx="107" cy="38" r="3.5" fill="var(--plum)"/>
+          <text x="100" y="105" text-anchor="middle" font-size="22">🍲</text>
+        </svg>
+      </div>
+      <h2>Enter: the self-appointed Royal Nurse</h2>
+      <p>From two cities away, a mysteriously shy-looking man burst in — armed with ginger tea, turmeric milk, and absolutely no chill.</p>
+      <p><strong>"Everyone thinks I'm the quiet one,"</strong> he announced, adjusting a blanket that did not need adjusting. <em>"Suvetha's the only one who gets the premium version of me."</em></p>
+      <p>Today, premium-him had exactly one mission: make the dragon regret its life choices.</p>
+    </section>
+
+    <!-- Page 4 -->
+    <section class="page" data-page="3">
+      <div class="scene-icon">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 110 Q60 50 100 60 Q140 50 160 110" stroke="var(--coral-deep)" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <circle cx="100" cy="55" r="18" fill="var(--coral-deep)"/>
+          <path d="M88 52 q12 10 24 0" stroke="var(--cream)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="100" y="30" text-anchor="middle" font-size="20">🐉</text>
+          <text x="60" y="120" text-anchor="middle" font-size="16">☕</text>
+          <text x="140" y="120" text-anchor="middle" font-size="16">🧣</text>
+        </svg>
+      </div>
+      <h2>The battle of the century</h2>
+      <p>Round 1: Turmeric milk vs. the dragon. <em>Dragon coughs suspiciously.</em></p>
+      <p>Round 2: An extra blanket vs. the dragon. <em>Dragon shivers, unimpressed but weakening.</em></p>
+      <p>Round 3: A very bad joke, delivered at exactly the wrong moment. <em>Dragon groans. Suvetha almost smiles. The dragon panics — smiling is its greatest weakness.</em></p>
+    </section>
+
+    <!-- Page 5: joke interactive -->
+    <section class="page" data-page="4">
+      <div class="scene-icon">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="70" r="40" fill="var(--gold)" opacity="0.25"/>
+          <text x="100" y="85" text-anchor="middle" font-size="40">😄</text>
+        </svg>
+      </div>
+      <h2>Royal decree: laughter is medicine</h2>
+      <p>The court physician has prescribed one (1) terrible joke. Tap below — dragons hate this.</p>
+      <div class="joke-box">
+        <p class="joke-line" id="jokeLine">Tap "Deploy joke" to begin the counterattack →</p>
+        <button class="btn-ghost" id="jokeBtn" style="margin-top:8px; color: var(--coral-deep); border: 1.5px solid var(--rose);">Deploy joke 🎯</button>
+      </div>
+    </section>
+
+    <!-- Page 6: finale -->
+    <section class="page" data-page="5">
+      <div class="finale">
+        <div class="scene-icon">
+          <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 40 C112 20 145 25 148 55 C151 90 110 115 100 122 C90 115 49 90 52 55 C55 25 88 20 100 40 Z" fill="var(--coral)"/>
+            <text x="100" y="75" text-anchor="middle" font-size="18" fill="white">👑</text>
+          </svg>
+        </div>
+        <h2>And the dragon fled the kingdom</h2>
+        <p>Not because of medicine alone — but because a kingdom this loved has no room for uninvited dragons.</p>
+        <p class="signoff">"You're not just someone I fell for, Suvetha. You're the one whose voice I listen for without noticing I'm doing it, and the reason a shy guy shows up loud. Rest today — let me worry about the rest. Get well soon, my queen. 👑❤️"</p>
+        <button class="btn-primary" id="confettiBtn" style="margin-top: 20px; width: 100%;">Send get-well hugs 🤗</button>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-row" id="navRow">
+    <button class="btn-ghost" id="prevBtn">← Back</button>
+    <button class="btn-primary" id="nextBtn">Continue →</button>
+  </div>
+
+  <footer>made with a slightly ridiculous amount of love, for Suvetha</footer>
+</main>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const progressEl = document.getElementById('progress');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  pages.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    progressEl.appendChild(dot);
+  });
+  const dots = Array.from(progressEl.children);
+
+  function render() {
+    pages.forEach((p, i) => p.classList.toggle('active', i === current));
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+      d.classList.toggle('done', i < current);
+    });
+    prevBtn.disabled = current === 0;
+    prevBtn.style.opacity = current === 0 ? '0.35' : '1';
+    if (current === pages.length - 1) {
+      nextBtn.style.display = 'none';
+    } else {
+      nextBtn.style.display = 'inline-flex';
+      nextBtn.textContent = current === pages.length - 2 ? 'Finish the story →' : 'Continue →';
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (current < pages.length - 1) { current++; render(); }
+  });
+  prevBtn.addEventListener('click', () => {
+    if (current > 0) { current--; render(); }
+  });
+
+  render();
+
+  // Jokes
+  const jokes = [
+    "Why did the fever break up with the thermometer? Too many mood swings.",
+    "The dragon tried to Google 'how to stay forever' — turns out turmeric milk has really good SEO.",
+    "Doctor: any allergies? Suvetha: yes, mornings, mondays, and this fever.",
+    "The dragon asked for one more day. The blanket said no.",
+    "Rest is just a nap with better PR."
+  ];
+  let jokeIdx = 0;
+  document.getElementById('jokeBtn').addEventListener('click', () => {
+    const line = document.getElementById('jokeLine');
+    line.style.opacity = 0;
+    setTimeout(() => {
+      line.textContent = jokes[jokeIdx % jokes.length];
+      jokeIdx++;
+      line.style.opacity = 1;
+    }, 150);
+  });
+  document.getElementById('jokeLine').style.transition = 'opacity 0.15s ease';
+
+  // Confetti finale
+  document.getElementById('confettiBtn').addEventListener('click', () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'confetti-wrap';
+    document.body.appendChild(wrap);
+    const emojis = ['❤️','🎉','🌸','✨','🤗','💛'];
+    for (let i = 0; i < 40; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.animationDelay = (Math.random() * 0.6) + 's';
+      c.style.fontSize = (14 + Math.random() * 14) + 'px';
+      wrap.appendChild(c);
+    }
+    setTimeout(() => wrap.remove(), 3200);
+  });
+
+  // Floating background hearts
+  const sky = document.getElementById('sky');
+  const skyEmojis = ['❤️','✨','🌙'];
+  for (let i = 0; i < 10; i++) {
+    const s = document.createElement('span');
+    s.textContent = skyEmojis[i % skyEmojis.length];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDuration = (14 + Math.random() * 10) + 's';
+    s.style.animationDelay = (Math.random() * -20) + 's';
+    s.style.fontSize = (14 + Math.random() * 10) + 'px';
+    sky.appendChild(s);
+  }
+</script>
+
+</body>
+</html>
